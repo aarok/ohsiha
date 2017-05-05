@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}Map{% endblock %}
+
+{% block navigation %}
+<div>
+    <ul>
+      <li><a href="{% url 'myprofile' %}">Profile</a></li>
+      <li><a href="{% url 'addfish' %}">Add Fish</a></li>
+      <li><a href="{% url 'mapview' %}">Map</a></li>
+      <li><a href="{% url 'logout' %}">Logout</a></li>
+    </ul>
+</div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+  var map;
+  var heatmap;
+
+  function initMap() {
+    var kilppari = {lat: 69.030728, lng: 20.777025};
+    map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 11,
+      center: kilppari
+    });
+  }
+
+  $(document).ready( function() {
+    $("#queryform").submit(function(e) {
+      var data = $("#queryform").serialize();
+      $.ajax({
+        url: '/fish/api/mapquery',
+        data: data,
+      })
+        .done(function( msg ) {
+          if(heatmap !== undefined)
+            heatmap.setData([]);
+          var elements = JSON.parse(msg).length;
+          var heatmapData = [];
+          for(var i = 0; i<elements; ++i) {
+            var o = JSON.parse(msg)[i].fields;
+            var coords = [];
+            for(var prop in o) {
+              if( prop === 'catch_latitude' ) {
+                coords[0] = o[prop];
+              } else if ( prop === 'catch_longitude' ) {
+                coords[1] = o[prop];
+              }
+            }
+            var latLng = new google.maps.LatLng(coords[0],coords[1]);
+            heatmapData.push(latLng);
+          }
+          heatmap = new google.maps.visualization.HeatmapLayer({
+            data: heatmapData,
+            dissipating: true,
+            radius: 10,
+            map: map
+          });
+      });
+      e.preventDefault();
+    });
+  });
+
+</script>
+<script async defer
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAm94V9WjjAMWqPRGoq8LUtZgtvCZPwAg0&libraries=visualization&callback=initMap">
+</script>
+{% endblock %}
+
+{% block content %}
+<h2>Map</h2>
+<p>Search for a fish species i.e. "hauki" to see where they have been caught on the map</p>
+<div id="map"></div>
+<form id="queryform" action="/fish/api/myfish" title="" method="get">
+  <div>
+    <label class="title">Fish species: </label>
+    <input type="text" id="species" name="species" >
+  </div>
+  <div>
+    <input type="submit" id="submitButton" name="submitButton" value="Submit">
+  </div>
+ </form>
+{% endblock %}

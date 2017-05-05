@@ -1,0 +1,36 @@
+ul {
+  list-style-type: none;;
+}
+
+#addfish {
+  float: left;
+  width: 160px;
+}
+
+#speciesform {
+  width: 160px;
+  padding: 10px;
+}
+
+#queryform {
+  width: 160px;
+  padding: 10px;
+}
+
+#map {
+  height: 400px;
+  width: 100%;
+}
+
+#content {
+  width: 600px;
+  margin: auto;
+}
+
+.esim {
+  float: left;
+}
+
+.esim li {
+  padding-bottom: 20px
+}

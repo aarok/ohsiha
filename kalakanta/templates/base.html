@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}" />
+    <title>{% block title %}Kalakanta{% endblock %}</title>
+</head>
+
+<body>
+    <div id="navigation">
+        {% block navigation %}{% endblock %}
+    </div>
+    <div id="content">
+        {% block content %}{% endblock %}
+    </div>
+    <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+    {% block javascript %}{% endblock %}
+</body>
+</html>

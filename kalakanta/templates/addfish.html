@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Add fish form{% endblock %}
+
+{% block navigation %}
+<div>
+    <ul>
+      <li><a href="{% url 'myprofile' %}">Profile</a></li>
+      <li><a href="{% url 'addfish' %}">Add Fish</a></li>
+      <li><a href="{% url 'mapview' %}">Map</a></li>
+      <li><a href="{% url 'logout' %}">Logout</a></li>
+    </ul>
+</div>
+{% endblock %}
+
+{% block content %}
+<h2>Add fish to database</h2>
+<p>Here you can add information on the fish you caught to the database</p>
+<form id="addfish" action="/fish/addfish/" method="post">
+  {% csrf_token %}
+  {{ form }}
+  <input type="submit" value="Submit" />
+</form>
+<ul class="esim">
+  <li>"hauki"</li>
+  <li>"10/25/17"</li>
+  <li>"19:35"</li>
+  <li>"Verkko"</li>
+  <li>"61.44815"</li>
+  <li>"23.84765"</li>
+</ul>
+{% endblock %}

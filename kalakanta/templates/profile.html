@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}My Profile{% endblock %}
+
+{% block navigation %}
+<div>
+    <ul>
+      <li><a href="{% url 'myprofile' %}">Profile</a></li>
+      <li><a href="{% url 'addfish' %}">Add Fish</a></li>
+      <li><a href="{% url 'mapview' %}">Map</a></li>
+      <li><a href="{% url 'logout' %}">Logout</a></li>
+    </ul>
+</div>
+{% endblock %}
+
+{% block javascript %}
+  <script type="text/javascript">
+    $(document).ready( function() {
+
+      $("#speciesform").submit(function(e) {
+        $("#catchlist").empty();
+        $.ajax({
+          url: '/fish/api/myfish',
+          data: $("#speciesform").serialize(),
+        })
+          .done(function( msg ) {
+            var elements = JSON.parse(msg).length;
+            for(var i = 0; i<elements; ++i) {
+              var o = JSON.parse(msg)[i].fields;
+              for(var prop in o) {
+                if( prop !== 'user') {
+                  var to_html = "<li>" + prop + ": " + o[prop] + "</li>";
+                  $("#catchlist").append(to_html);
+                }
+              }
+              var empty = "<li>" + "*********************" + "</li>"
+              $("#catchlist").append(empty);
+            }
+        });
+
+        e.preventDefault();
+      });
+    });
+  </script>
+{% endblock %}
+
+{% block content %}
+<h2>My Catch</h2>
+<p>Type in a fish species name i.e. "hauki" to see what you have caught</p>
+<form id="speciesform" action="/fish/api/myfish" title="" method="get">
+  <div>
+    <label class="title">Select species: </label>
+    <input type="text" id="species" name="species" >
+  </div>
+  <div>
+    <input type="submit" id="submitButton" name="submitButton" value="Submit">
+  </div>
+ </form>
+
+ <ul id="catchlist"></ul>
+
+{% endblock %}
